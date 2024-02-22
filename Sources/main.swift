@@ -58,7 +58,7 @@ if let value = buildCountFlag.value {
     }
 }
 
-if flagFailures.isEmpty {
+if !flagFailures.isEmpty {
     print("The following flags weren't set, or mis-set")
     flagFailures.forEach { print($0) }
     exit(1)
