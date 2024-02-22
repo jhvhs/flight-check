@@ -2,7 +2,14 @@
 
 import Foundation
 
+let urlFlag = Flag(shortFlag: "-u", longFlag: "--url", environmentVariableName: "FC_CONCOURSE_URL", helpText: "Main Concourse URL")
+let teamFlag = Flag(shortFlag: "-t", longFlag: "--team", environmentVariableName: "FC_CONCOURSE_TEAM", helpText: "Concourse team name")
 let helpFlag = Flag(shortFlag: "-h", longFlag: "--help", environmentVariableName: nil, helpText: "Display help")
+let tokenFlag = Flag(shortFlag: "-k", longFlag: "--token", environmentVariableName: "FC_CONCOURSE_TOKEN", 
+    helpText: "Concourse auth token, can be obtained by visiting \(urlFlag.value?.trimmingCharacters(in: CharacterSet(charactersIn: "/")) ?? "<concourse-url>")/login?fly_port=10987")
+let pipelineFlag = Flag(shortFlag: "-p", longFlag: "--pipeline", environmentVariableName: "FC_CONCOURSE_PIPELINE", helpText: "Concourse pipeline name")
+let jobFlag = Flag(shortFlag: "-j", longFlag: "--job", environmentVariableName: "FC_CONCOURSE_JOB", helpText: "Name of the job in the pipeline")
+let buildCountFlag = Flag(shortFlag: "-c", longFlag: "--build-count", environmentVariableName: "FC_CONCOURSE_BUILD_COUNT", helpText: "(optional) The number of builds to analyse")
 
 if helpFlag.flagPresent {
     displayHelp()
@@ -12,43 +19,36 @@ if helpFlag.flagPresent {
 var buildCount: Int?
 var flagFailures = [String]()
 
-let urlFlag = Flag(shortFlag: "-u", longFlag: "--url", environmentVariableName: "FC_CONCOURSE_URL", helpText: "Main Concourse URL")
 let url = if let value = urlFlag.value {
     value
 } else {
     "\(flagFailures.append("Concourse URL is required"))"
 }
 
-let teamFlag = Flag(shortFlag: "-t", longFlag: "--team", environmentVariableName: "FC_CONCOURSE_TEAM", helpText: "Concourse team name")
 let team = if let value = teamFlag.value {
     value
 } else {
     "\(flagFailures.append("Concourse team is required"))"
 }
 
-let tokenFlag = Flag(shortFlag: "-k", longFlag: "--token", environmentVariableName: "FC_CONCOURSE_TOKEN", 
-    helpText: "Concourse auth token, can be obtained by visiting \(urlFlag.value?.trimmingCharacters(in: CharacterSet(charactersIn: "/")) ?? "<concourse-url>")/login?fly_port=10987")
 let token = if let value = tokenFlag.value {
     value
 } else {
     "\(flagFailures.append("Concourse auth token is required"))"
 }
 
-let pipelineFlag = Flag(shortFlag: "-p", longFlag: "--pipeline", environmentVariableName: "FC_CONCOURSE_PIPELINE", helpText: "Concourse pipeline name")
 let pipeline = if let value = pipelineFlag.value {
     value
 } else {
     "\(flagFailures.append("Concourse pipeline name is required"))"
 }
 
-let jobFlag = Flag(shortFlag: "-j", longFlag: "--job", environmentVariableName: "FC_CONCOURSE_JOB", helpText: "Name of the job in the pipeline")
 let job = if let value = jobFlag.value {
     value
 } else {
     "\(flagFailures.append("Concourse job name is required"))"
 }
 
-let buildCountFlag = Flag(shortFlag: "-c", longFlag: "--build-count", environmentVariableName: "FC_CONCOURSE_BUILD_COUNT", helpText: "(optional) The number of builds to analyse")
 if let value = buildCountFlag.value {
     if let intValue = Int(value) {
         buildCount = intValue
